@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>{{ system.name }}</h1>
+<h2>{{ challenge.title }}</h2>
+<p>{{ challenge.description }}</p>
+<hr>
+<h3>INSTRUCTIONS</h3>
+<p>{{ challenge.instructions }}</p>
+<hr>
+<h3>LANGUAGE</h3>
+<a href="?lang=c" {% if language == 'c' %}style="text-decoration:underline"{% endif %}>C</a> &nbsp;
+<a href="?lang=asm" {% if language == 'asm' %}style="text-decoration:underline"{% endif %}>ASSEMBLY</a>
+<h3>WRITE YOUR CODE</h3>
+<div id="editor"></div>
+<button onclick="runCode()">RUN</button>
+<pre id="output">Output will appear here.</pre>
+<form method="POST" action="{% url 'hardware_complete' system.slug challenge.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="language" value="{{ language }}">
+    <button type="submit">MISSION COMPLETE</button>
+</form>
+<a href="{% url 'hardware_detail' system.slug %}">← Back to {{ system.name }}</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var mode = "{{ language }}" === "asm" ? "text/x-asm" : "text/x-csrc";
+    var editor = CodeMirror(document.getElementById('editor'), {
+        mode: mode,
+        theme: 'default',
+        lineNumbers: true,
+        styleActiveLine: true,
+        value: `{{ starter_code|escapejs }}`
+    });
+    function runCode() {
+        document.getElementById('output').textContent = 'Simulation running... (execution not available in demo)';
+    }
+</script>
+{% endblock %}

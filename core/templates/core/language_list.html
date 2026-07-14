@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>{{ user.username }}.</h2>
+<p>This are what you need now:</p>
+<ul>
+    {% for language in languages %}
+        <li><a href="{% url 'language_detail' language.pk %}">{{ language.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

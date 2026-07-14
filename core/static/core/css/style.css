@@ -1,0 +1,581 @@
+/* ================================
+   SYSTEM THEME
+================================ */
+
+:root {
+    --bg: #050505;
+    --text: #d4d4d4;
+    --accent: #ffffff;
+    --border: rgba(255,255,255,0.15);
+
+    --max-width: 900px;
+    --transition: 180ms ease;
+}
+
+/* ================================
+   RESET
+================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+::selection {
+    background: rgba(255,255,255,0.2);
+    color: var(--text);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        "JetBrains Mono",
+        "Fira Code",
+        monospace;
+
+    font-size: 15px;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ================================
+   LAYOUT
+================================ */
+
+.container {
+    width: min(100% - 4rem, var(--max-width));
+    margin-inline: auto;
+    padding-block: 5rem;
+}
+
+/* ================================
+   TYPOGRAPHY
+================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+p {
+    margin-block: 1.5rem;
+}
+
+/* ================================
+   LINKS
+================================ */
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+
+    transition: var(--transition);
+}
+
+a:hover {
+    text-shadow:
+        0 0 4px rgba(255,255,255,0.35),
+        0 0 8px rgba(255,255,255,0.18);
+}
+
+/* ================================
+   NAVIGATION
+================================ */
+
+nav {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 5rem;
+}
+
+nav a {
+    opacity: .8;
+}
+
+nav a:hover {
+    opacity: 1;
+}
+
+/* ================================
+   DIVIDERS
+================================ */
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4rem 0;
+}
+
+/* ================================
+   FORMS
+================================ */
+
+input,
+textarea,
+select {
+    width: 100%;
+
+    background: transparent;
+    color: var(--text);
+
+    border: 1px solid transparent;
+    outline: none;
+
+    padding: 1rem 0;
+
+    font: inherit;
+
+    transition: var(--transition);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(212,212,212,.35);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--accent);
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+button {
+    background: transparent;
+    color: var(--accent);
+
+    border: 1px solid var(--accent);
+
+    padding: .9rem 1.4rem;
+
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #050505 inset;
+    -webkit-text-fill-color: #d4d4d4;
+    caret-color: #d4d4d4;
+}
+
+button:hover {
+    background: var(--accent);
+    color: #050505;
+}
+
+/* ================================
+   LISTS
+================================ */
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+li {
+    margin-bottom: .75rem;
+}
+
+li::before {
+    content: "> ";
+    color: var(--accent);
+}
+
+/* ================================
+   CODE BLOCKS
+================================ */
+
+pre,
+code {
+    font-family:
+        "JetBrains Mono",
+        "Fira Code",
+        monospace;
+}
+
+pre {
+    overflow-x: auto;
+
+    border-left: 1px solid var(--border);
+
+    padding-left: 1.5rem;
+}
+
+.editor-shell {
+    margin-top: 2rem;
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+#output,
+#errors {
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    padding: 1rem;
+    min-height: 3.5rem;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+}
+
+#error { 
+    color: #ff6b6b;
+}
+
+/* ================================
+   SCROLLBAR
+================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.CodeMirror {
+    background: #0a0a0a !important;
+    color: #fff !important;
+    border: 1px solid var(--border);
+    height: 300px;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 14px;
+}
+
+.CodeMirror-gutters {
+    background: #050505 !important;
+    border-right: 1px solid var(--border);
+}
+
+.CodeMirror-linenumber {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.CodeMirror-cursor {
+    border-left: 1px solid #fff;
+}
+
+.CodeMirror-activeline-background {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ================================
+   LANDING PAGE
+================================ */
+
+.landing-hero {
+    padding: 4rem 0;
+    max-width: 700px;
+}
+
+.landing-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 1.5rem;
+}
+
+.landing-sub {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.landing-sub2 {
+    color: #aaa;
+    margin-bottom: 3rem;
+}
+
+.landing-features {
+    display: flex;
+    gap: 4rem;
+    margin-bottom: 3rem;
+}
+
+.feature-item {
+    color: #fff;
+    margin-bottom: 0.75rem;
+    font-size: 14px;
+}
+
+.landing-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-primary {
+    background: #fff;
+    color: #000;
+    padding: 0.8rem 2rem;
+    font-family: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: background 180ms ease;
+}
+
+.btn-primary:hover {
+    background: #ddd;
+    text-shadow: none;
+}
+
+.btn-secondary {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.btn-secondary:hover {
+    color: #fff;
+    text-shadow: none;
+    border-color: #fff;
+}
+
+/* ================================
+   LESSON LAYOUT
+================================ */
+
+.lesson-layout {
+    display: flex;
+    gap: 0;
+    min-height: calc(100vh - 8rem);
+    margin: 0 -2rem;
+}
+
+.lesson-sidebar {
+    width: 220px;
+    min-width: 220px;
+    border-right: 1px solid #222;
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #aaa;
+    padding: 0 1.5rem 1rem;
+    border-bottom: 1px solid #222;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin: 0;
+}
+
+.sidebar-nav li::before {
+    content: none;
+}
+
+.sidebar-nav li a {
+    display: block;
+    padding: 0.5rem 1.5rem;
+    color: #aaa;
+    font-size: 13px;
+    text-decoration: none;
+    transition: 180ms ease;
+}
+
+.sidebar-nav li a:hover {
+    color: #fff;
+    background: #111;
+    text-shadow: none;
+}
+
+.sidebar-nav li.active a {
+    color: #fff;
+    background: #1a1a1a;
+    border-left: 2px solid #fff;
+}
+
+.lesson-main {
+    flex: 1;
+    padding: 2rem 3rem;
+    max-width: 900px;
+}
+
+.lesson-content {
+    color: #ccc;
+    line-height: 1.9;
+    margin-bottom: 2rem;
+}
+
+.example-block {
+    background: #0d0d0d;
+    border: 1px solid #222;
+    margin-bottom: 2rem;
+}
+
+.example-label {
+    padding: 0.75rem 1rem;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #aaa;
+    border-bottom: 1px solid #222;
+}
+
+.example-output {
+    border-top: 1px solid #222;
+    padding: 1rem;
+}
+
+.output-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.output-display {
+    color: #fff;
+    font-size: 14px;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    border-left: none;
+    padding-left: 0;
+}
+
+.try-btn {
+    display: inline-block;
+    background: #fff;
+    color: #000;
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0.75rem 1rem;
+    transition: background 180ms ease;
+}
+
+.try-btn:hover {
+    background: #ddd;
+    text-shadow: none;
+}
+
+.lesson-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.nav-btn {
+    border: 1px solid #333;
+    color: #aaa;
+    padding: 0.6rem 1.2rem;
+    font-size: 13px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: 180ms ease;
+}
+
+.nav-btn:hover {
+    color: #fff;
+    border-color: #fff;
+    text-shadow: none;
+}
+
+.complete-btn {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 0.7rem 1.5rem;
+    font-family: inherit;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: 180ms ease;
+    margin-bottom: 1rem;
+}
+
+.complete-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+.lesson-progress {
+    font-size: 12px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ================================
+   CODEMIRROR OVERRIDES FOR LESSON
+================================ */
+
+.example-block .CodeMirror {
+    background: #0d0d0d !important;
+    color: #fff !important;
+    border: none;
+    height: auto;
+    min-height: 100px;
+}
+
+.example-block .CodeMirror-gutters {
+    background: #111 !important;
+    border-right: 1px solid #222;
+}
+
+.example-block .CodeMirror-linenumber {
+    color: #444;
+}

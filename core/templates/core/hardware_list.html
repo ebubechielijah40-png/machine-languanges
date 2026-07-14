@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>HARDWARE SYSTEMS</h1>
+{% if unlocked %}
+<p>The hardware exists. Your task is to program it.</p>
+<ul>
+    {% for system in systems %}
+    <li>
+        <a href="{% url 'hardware_detail' system.slug %}">{{ system.name }}</a>
+        <span> — {{ system.description|truncatewords:10 }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>ACCESS DENIED.</p>
+<p>Complete the first 5 lessons of any language to unlock hardware challenges.</p>
+<a href="{% url 'language_list' %}">← Return to Languages</a>
+{% endif %}
+{% endblock %}

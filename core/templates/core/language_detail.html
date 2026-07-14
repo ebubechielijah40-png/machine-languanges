@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>{{ language.name }}</h2>
+<p>{{ language.description }}</p>
+<a href="/languages/">← Back</a>
+
+<h3>Lessons</h3>
+<ul>
+    {% for lesson in lessons %}
+        <li>
+            <a href="{% url 'lesson_detail' lesson.pk %}">
+                {{ lesson.order }}. {{ lesson.title }}
+            </a>
+            {% if progress.current_lesson > lesson.order %} ✓{% endif %}
+        </li>
+    {% empty %}
+        <li>No lessons available.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

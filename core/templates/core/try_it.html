@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Try it Yourself — {{ lesson.title }}</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/gas/gas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            background: #000;
+            color: #fff;
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            overflow: hidden;
+        }
+        .try-header {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .try-header span {
+            color: #aaa;
+            font-size: 13px;
+        }
+        .try-body {
+            display: flex;
+            height: calc(100% - 56px);
+        }
+        .try-editor-side,
+        .try-output-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .try-editor-side {
+            border-right: 1px solid #333;
+        }
+        .side-label {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 0.5rem 1rem;
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        #editor {
+            flex: 1;
+        }
+        .output-panel {
+            flex: 1;
+            padding: 1rem;
+            color: #fff;
+            font-size: 14px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            background: #080808;
+        }
+        .run-btn,
+        .reset-btn {
+            border: none;
+            padding: 0.5rem 1.5rem;
+            font-family: inherit;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+        }
+        .run-btn {
+            background: #fff;
+            color: #000;
+        }
+        .run-btn:hover {
+            background: #ddd;
+        }
+        .reset-btn {
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #333;
+        }
+        .reset-btn:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+        .CodeMirror {
+            height: 100%;
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            font-size: 14px;
+            background: #0a0a0a !important;
+            color: #fff !important;
+        }
+        .CodeMirror-gutters {
+            background: #111 !important;
+            border-right: 1px solid #333;
+        }
+        .CodeMirror-linenumber { color: #555; }
+        .CodeMirror-cursor { border-left: 1px solid #fff; }
+    </style>
+</head>
+<body>
+    <div class="try-header">
+        <button class="run-btn" onclick="runCode()">Run ❯</button>
+        <button class="reset-btn" onclick="resetCode()">Reset</button>
+        <span>{{ lesson.language.name }} — {{ lesson.title }}</span>
+    </div>
+    <div class="try-body">
+        <div class="try-editor-side">
+            <div class="side-label">Your Code</div>
+            <div id="editor"></div>
+        </div>
+        <div class="try-output-side">
+            <div class="side-label">Output</div>
+            <div class="output-panel" id="output">Output will appear here.</div>
+        </div>
+    </div>
+    <script>
+        var originalCode = `{{ lesson.starter_code|escapejs }}`;
+        var editor = CodeMirror(document.getElementById('editor'), {
+            mode: '{{ codemirror_mode }}',
+            lineNumbers: true,
+            styleActiveLine: true,
+            value: originalCode,
+            theme: 'default'
+        });
+        async function runCode() {
+            const btn = document.querySelector('.run-btn');
+            const outputPanel = document.getElementById('output');
+            const code = editor.getValue();
+            const language = '{{ lesson.language.name }}';
+            
+            const langMap = {
+                'C': { language: 'c', version: '10.2.0', ext: 'c' },
+                'Assembly': { language: 'nasm', version: '2.15.05', ext: 'asm' },
+                'Machine Language': { language: 'nasm', version: '2.15.05', ext: 'asm' }
+            };
+            
+            const lang = langMap[language] || { language: 'c', version: '10.2.0', ext: 'c' };
+            
+            btn.textContent = 'Running...';
+            btn.disabled = true;
+            outputPanel.textContent = 'Executing...';
+            
+            try {
+                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        language: lang.language,
+                        version: lang.version,
+                        files: [{
+                            name: 'main.' + lang.ext,
+                            content: code
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    outputPanel.textContent = 'Execution engine returned an error. Try again.';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.run) {
+                    const stdout = data.run.stdout || '';
+                    const stderr = data.run.stderr || '';
+                    const compile_output = data.compile ? (data.compile.stderr || '') : '';
+                    
+                    let output = '';
+                    if (compile_output) output += '--- COMPILE ---\n' + compile_output + '\n';
+                    if (stdout) output += stdout;
+                    if (stderr) output += '\n--- RUNTIME ERROR ---\n' + stderr;
+                    
+                    outputPanel.textContent = output.trim() || '(program ran with no output)';
+                } else {
+                    outputPanel.textContent = 'No output returned. Check your code syntax.';
+                }
+            } catch (error) {
+                outputPanel.textContent = 'Could not reach execution engine.\nCheck your internet connection and try again.';
+            } finally {
+                btn.textContent = 'Run ❯';
+                btn.disabled = false;
+            }
+        }
+        function resetCode() {
+            editor.setValue(originalCode);
+            document.getElementById('output').textContent = 'Output will appear here.';
+        }
+    </script>
+</body>
+</html>

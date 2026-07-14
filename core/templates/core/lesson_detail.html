@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="lesson-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="lesson-sidebar">
+        <div class="sidebar-title">{{ lesson.language.name }} TUTORIAL</div>
+        <ul class="sidebar-nav">
+            {% for l in all_lessons %}
+            <li class="{% if l.pk == lesson.pk %}active{% endif %}">
+                <a href="{% url 'lesson_detail' l.pk %}">{{ l.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="lesson-main">
+        <h1>{{ lesson.language.name }} — {{ lesson.title }}</h1>
+
+        <!-- DOCUMENTATION -->
+        <div class="lesson-content">
+            {{ lesson.content|linebreaks }}
+        </div>
+
+        <!-- EXAMPLE CODE BLOCK -->
+        <div class="example-block">
+            <div class="example-label">Example</div>
+            <div id="example-editor"></div>
+            <div class="example-output">
+                <div class="output-label">Output:</div>
+                <pre class="output-display">{{ lesson.example_output }}</pre>
+            </div>
+            <a href="{% url 'try_it' lesson.pk %}" target="_blank" class="try-btn">Try it Yourself »</a>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="lesson-nav">
+            {% if prev_lesson %}
+            <a href="{% url 'lesson_detail' prev_lesson.pk %}" class="nav-btn">❮ Previous</a>
+            {% endif %}
+            {% if next_lesson %}
+            <a href="{% url 'lesson_detail' next_lesson.pk %}" class="nav-btn">Next ❯</a>
+            {% endif %}
+        </div>
+
+        <!-- MARK COMPLETE -->
+        <form method="POST" action="{% url 'lesson_complete' lesson.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="complete-btn">MARK COMPLETE</button>
+        </form>
+
+        <div class="lesson-progress">
+            Lesson {{ lesson.order }} of {{ total_lessons }} — {{ completed_count }} completed
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var exampleEditor = CodeMirror(document.getElementById('example-editor'), {
+        mode: '{{ codemirror_mode }}',
+        theme: 'default',
+        lineNumbers: true,
+        readOnly: true,
+        value: `{{ lesson.starter_code|escapejs }}`
+    });
+</script>
+{% endblock %}

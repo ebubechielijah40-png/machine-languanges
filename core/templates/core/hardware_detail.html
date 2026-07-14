@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h1>{{ system.name }}</h1>
+<p>{{ system.description }}</p>
+<a href="{% url 'hardware_list' %}">← Back to Systems</a>
+<h2>CHALLENGES</h2>
+<ul>
+    {% for challenge in challenges %}
+    <li>
+        <a href="{% url 'hardware_challenge' system.slug challenge.pk %}">
+            {{ challenge.order }}. {{ challenge.title }}
+        </a>
+        {% if challenge.pk in completed_ids %}
+        <span> — COMPLETE</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
